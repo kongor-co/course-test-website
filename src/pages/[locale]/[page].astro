@@ -1,0 +1,18 @@
+---
+import { StaticSitePage, type PageName } from '@/components/static-site-page';
+import { pageMetadata } from '@/lib/page-meta';
+import { locales, type Locale } from '@/lib/site-content';
+import SiteLayout from '../../layouts/SiteLayout.astro';
+
+export function getStaticPaths() {
+  const routePages: PageName[] = ['course', 'curriculum', 'about', 'apply', 'contact', 'privacy', 'imprint', 'cookies'];
+  return locales.flatMap((locale) => routePages.map((page) => ({ params: { locale, page } })));
+}
+
+const locale = Astro.params.locale as Locale;
+const page = Astro.params.page as PageName;
+const meta = pageMetadata(locale, page);
+---
+<SiteLayout locale={locale} page={page} title={meta.title} description={meta.description}>
+  <StaticSitePage locale={locale} page={page} client:load />
+</SiteLayout>

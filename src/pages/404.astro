@@ -1,0 +1,26 @@
+---
+import '../../app/globals.css';
+const basePath = import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="robots" content="noindex" />
+    <title>Seite nicht gefunden | The Best School</title>
+  </head>
+  <body>
+    <main id="main-content" class="page-hero">
+      <div class="section-inner content-prose">
+        <p class="eyebrow">404</p>
+        <h1>Seite nicht gefunden.</h1>
+        <p>Wähle eine Sprache, um zur Startseite zurückzukehren.</p>
+        <div class="hero-actions">
+          <a class="button" href={`${basePath}/de/`}>Deutsch</a>
+          <a class="button secondary" href={`${basePath}/en/`} lang="en">English</a>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>

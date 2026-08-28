@@ -1,0 +1,16 @@
+---
+import { StaticSitePage } from '@/components/static-site-page';
+import { pageMetadata } from '@/lib/page-meta';
+import { locales, type Locale } from '@/lib/site-content';
+import SiteLayout from '../../layouts/SiteLayout.astro';
+
+export function getStaticPaths() {
+  return locales.map((locale) => ({ params: { locale } }));
+}
+
+const locale = Astro.params.locale as Locale;
+const meta = pageMetadata(locale);
+---
+<SiteLayout locale={locale} title={meta.title} description={meta.description}>
+  <StaticSitePage locale={locale} client:load />
+</SiteLayout>
