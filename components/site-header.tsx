@@ -33,8 +33,8 @@ export function SiteHeader({ locale, path = '' }: { locale: Locale; path?: strin
           <span>The Best School</span>
         </a>
         <nav className="main-nav" aria-label={navigationLabel}>
-          <a href={internalPath(`/${locale}/course/`)}>{content.nav.course}</a>
-          <a href={internalPath(`/${locale}/curriculum/`)}>{content.nav.curriculum}</a>
+          <a href={internalPath(`/${locale}/courses/`)}>{content.nav.course}</a>
+          <a href={internalPath(`/${locale}/schedule/`)}>{content.nav.schedule}</a>
           <a href={internalPath(`/${locale}/about/`)}>{content.nav.about}</a>
           <a href={internalPath(`/${locale}/contact/`)}>{content.nav.contact}</a>
         </nav>
@@ -48,8 +48,8 @@ export function SiteHeader({ locale, path = '' }: { locale: Locale; path?: strin
           <details className="mobile-menu">
             <summary aria-label={menuLabel}>Menu</summary>
             <nav aria-label={mobileNavigationLabel}>
-              <a href={internalPath(`/${locale}/course/`)}>{content.nav.course}</a>
-              <a href={internalPath(`/${locale}/curriculum/`)}>{content.nav.curriculum}</a>
+              <a href={internalPath(`/${locale}/courses/`)}>{content.nav.course}</a>
+              <a href={internalPath(`/${locale}/schedule/`)}>{content.nav.schedule}</a>
               <a href={internalPath(`/${locale}/about/`)}>{content.nav.about}</a>
               <a href={internalPath(`/${locale}/contact/`)}>{content.nav.contact}</a>
               <a href={internalPath(`/${otherLocale}${normalized}/`)} hrefLang={otherLocale} lang={otherLocale}>{otherLocale.toUpperCase()}</a>

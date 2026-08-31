@@ -21,6 +21,14 @@ const pages: Record<PageName, Record<Locale, { title: string; description: strin
     de: { title: 'IT-Projektmanagement und KI Curriculum', description: 'Neun Phasen mit Vollzeit- und Teilzeit-Pacing, KI-Perspektive und praktischen Ergebnissen.' },
     en: { title: 'IT Project Management and AI Curriculum', description: 'Nine phases with full-time and part-time pacing, AI-era angles, and practical outputs.' },
   },
+  courses: {
+    de: { title: 'Digitale Kurse mit KI-Praxis', description: 'Drei praxisnahe Onlinekurse für Projektmanagement, Produktmanagement und digitale Transformation.' },
+    en: { title: 'Digital Courses with Applied AI', description: 'Three practitioner-led online courses in project management, product management, and digital transformation.' },
+  },
+  schedule: {
+    de: { title: 'Kurstermine', description: 'Alle vorläufigen Vollzeit- und Teilzeit-Termine für die drei Onlinekurse.' },
+    en: { title: 'Course Schedule', description: 'All provisional full-time and part-time dates for the three online courses.' },
+  },
   about: {
     de: { title: 'Über The Best School', description: 'Praxisnahe digitale Bildung für Arbeit, die sich ständig verändert.' },
     en: { title: 'About The Best School', description: 'Practical digital career education for work that keeps changing.' },

@@ -5,7 +5,7 @@ import { locales, type Locale } from '@/lib/site-content';
 import SiteLayout from '../../layouts/SiteLayout.astro';
 
 export function getStaticPaths() {
-  const routePages: PageName[] = ['course', 'curriculum', 'about', 'apply', 'contact', 'privacy', 'imprint', 'cookies'];
+  const routePages: PageName[] = ['course', 'curriculum', 'courses', 'schedule', 'about', 'apply', 'contact', 'privacy', 'imprint', 'cookies'];
   return locales.flatMap((locale) => routePages.map((page) => ({ params: { locale, page } })));
 }
 

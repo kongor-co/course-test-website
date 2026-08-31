@@ -9,13 +9,16 @@ import { ApplicationForm, ContactForm } from './forms';
 import { HomePreview } from './home-preview';
 import { LegalPage } from './legal-page';
 import { PageShell } from './page-shell';
+import { CoursesOverviewPage, SchedulePage } from './course-catalog-page';
 
-export type PageName = 'course' | 'curriculum' | 'about' | 'apply' | 'contact' | 'privacy' | 'imprint' | 'cookies';
+export type PageName = 'course' | 'curriculum' | 'courses' | 'schedule' | 'about' | 'apply' | 'contact' | 'privacy' | 'imprint' | 'cookies';
 
 export function StaticSitePage({ locale, page }: { locale: Locale; page?: PageName }) {
   if (!page) return <HomePreview locale={locale} />;
   if (page === 'course') return <CourseView locale={locale} />;
   if (page === 'curriculum') return <CurriculumView locale={locale} />;
+  if (page === 'courses') return <CoursesOverviewPage locale={locale} />;
+  if (page === 'schedule') return <SchedulePage locale={locale} />;
   if (page === 'about') return <AboutView locale={locale} />;
   if (page === 'apply') return <ApplyView locale={locale} />;
   if (page === 'contact') return <ContactView locale={locale} />;

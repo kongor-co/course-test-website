@@ -4,11 +4,13 @@ import { curriculumPdfPath, internalPath } from '@/lib/routes';
 import type { Locale } from '@/lib/site-content';
 import { previewContent } from '@/lib/site-content';
 import { PageShell } from './page-shell';
+import { getCourseCards } from '@/lib/course-catalog';
 
 export function HomePreview({ locale }: { locale: Locale }) {
   const content = previewContent[locale];
   const copy = pageCopy[locale];
   const phases = curriculumByLocale[locale];
+  const courses = getCourseCards(locale);
   const applyText = content.nav.apply;
   const schema = {
     '@context': 'https://schema.org',
@@ -74,7 +76,26 @@ export function HomePreview({ locale }: { locale: Locale }) {
           </div>
         </section>
 
-        <section className="section white">
+        <section className="section white home-course-section">
+          <div className="section-inner">
+            <div className="section-heading">
+              <h2>{locale === 'de' ? 'Drei Wege für digitale Arbeit mit KI.' : 'Three paths for digital work with AI.'}</h2>
+              <p>{locale === 'de' ? 'Vom fokussierten Delivery-Projekt über das Tech-Produkt bis zur organisationsweiten Transformation.' : 'From a focused delivery initiative to a technology product and organization-wide transformation.'}</p>
+            </div>
+            <div className="home-course-grid">
+              {courses.map((course, index) => <article className="home-course-card" data-accent={course.accent} key={course.slug}>
+                <span>0{index + 1}</span>
+                <p>{course.category}</p>
+                <h3>{course.title}</h3>
+                <small>{course.duration}</small>
+                <a className="text-link" href={internalPath(`/${locale}${course.href}`)}>{locale === 'de' ? 'Kurs ansehen' : 'View course'} →</a>
+              </article>)}
+            </div>
+            <a className="button secondary section-button" href={internalPath(`/${locale}/courses/`)}>{locale === 'de' ? 'Alle Kurse vergleichen' : 'Compare all courses'}</a>
+          </div>
+        </section>
+
+        <section className="section">
           <div className="section-inner">
             <div className="section-heading">
               <h2>{content.cohortHeading}</h2>

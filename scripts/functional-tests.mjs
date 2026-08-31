@@ -7,7 +7,7 @@ import { fileURLToPath } from 'node:url';
 const projectRoot = fileURLToPath(new URL('../', import.meta.url));
 const outputRoot = join(projectRoot, 'dist');
 const basePath = '/course-test-website';
-const localePages = ['', 'course', 'curriculum', 'about', 'apply', 'contact', 'privacy', 'imprint', 'cookies'];
+const localePages = ['', 'course', 'curriculum', 'courses', 'schedule', 'about', 'apply', 'contact', 'privacy', 'imprint', 'cookies', 'courses/tech-product-management-ai', 'courses/tech-product-management-ai/curriculum', 'courses/digital-transformation-ai', 'courses/digital-transformation-ai/curriculum'];
 const routes = ['de', 'en'].flatMap((locale) => localePages.map((page) => `/${locale}/${page ? `${page}/` : ''}`));
 const results = [];
 
@@ -123,9 +123,24 @@ try {
     record(`Both course formats ${locale}`, every(course.includes('12 weeks FT'), course.includes('20 weeks PT')), 'full-time and part-time formats');
     record(`Nine curriculum phases ${locale}`, (curriculum.match(/class="phase-detail"/g) ?? []).length === 9, 'nine detailed phase articles');
     record(`Both pacing mappings ${locale}`, (curriculum.match(/class="pace-pair"/g) ?? []).length === 9, 'full-time and part-time mapping for every phase');
-    record(`Application fields ${locale}`, every(application.includes('name="email"'), application.includes('name="reason"'), application.includes('name="privacyConsent"'), application.includes('name="newsletterConsent"')), 'minimal application with separate consents');
+    record(`Application fields ${locale}`, every(application.includes('name="email"'), application.includes('name="course"'), application.includes('name="reason"'), application.includes('name="privacyConsent"'), application.includes('name="newsletterConsent"')), 'course-aware application with separate consents');
     record(`Contact form ${locale}`, every(contact.includes('name="email"'), contact.includes('name="message"')), 'email and message inputs');
     record(`Disabled WhatsApp ${locale}`, every(contact.includes('disabled=""'), contact.includes('WhatsApp contact coming soon')), 'disabled control with accessible label');
+  }
+
+  for (const locale of ['de', 'en']) {
+    const catalog = routeHtml.get(`/${locale}/courses/`) ?? '';
+    const schedule = routeHtml.get(`/${locale}/schedule/`) ?? '';
+    const product = routeHtml.get(`/${locale}/courses/tech-product-management-ai/`) ?? '';
+    const productCurriculum = routeHtml.get(`/${locale}/courses/tech-product-management-ai/curriculum/`) ?? '';
+    const transformation = routeHtml.get(`/${locale}/courses/digital-transformation-ai/`) ?? '';
+    const transformationCurriculum = routeHtml.get(`/${locale}/courses/digital-transformation-ai/curriculum/`) ?? '';
+    record(`Three-course catalog ${locale}`, every(catalog.includes('Tech Product Management with AI assistance'), catalog.includes('Digital Transformation with AI'), catalog.includes('IT Project Management in the World of AI Automations')), 'all three course names present');
+    record(`New schedule ${locale}`, every(schedule.includes('18 Jan 2027') || schedule.includes('18. Jan. 2027'), schedule.includes('8 Feb 2027') || schedule.includes('8. Feb. 2027')), 'product and transformation starts present');
+    record(`Product course content ${locale}`, every(product.includes('Tech Product Management with AI assistance'), product.includes('14 weeks') || product.includes('14 Wochen')), 'title and duration present');
+    record(`Transformation course content ${locale}`, every(transformation.includes('Digital Transformation with AI'), transformation.includes('16 weeks') || transformation.includes('16 Wochen')), 'title and duration present');
+    record(`Product curriculum phases ${locale}`, (productCurriculum.match(/class="phase-detail"/g) ?? []).length === 8, 'eight product phases');
+    record(`Transformation curriculum phases ${locale}`, (transformationCurriculum.match(/class="phase-detail"/g) ?? []).length === 8, 'eight transformation phases');
   }
 
   const pdfRoute = '/downloads/the-best-school-it-project-management-curriculum-en-2026-08-28.pdf';
@@ -141,9 +156,19 @@ try {
     }
   }
 
+  const additionalPdfRoutes = [
+    '/downloads/the-best-school-tech-product-management-with-ai-assistance-curriculum-en-2026-08-31.pdf',
+    '/downloads/the-best-school-digital-transformation-with-ai-curriculum-en-2026-08-31.pdf',
+  ];
+  for (const route of additionalPdfRoutes) {
+    const response = await get(route);
+    const data = Buffer.from(await response.arrayBuffer());
+    record(`Additional PDF ${route}`, every(response.status === 200, data.subarray(0, 4).toString('ascii') === '%PDF', data.length > 15000), `${data.length} bytes`);
+  }
+
   const sitemapResponse = await get('/sitemap.xml');
   const sitemap = await sitemapResponse.text();
-  record('Sitemap route count', (sitemap.match(/<url>/g) ?? []).length === 18, '18 localized URLs');
+  record('Sitemap route count', (sitemap.match(/<url>/g) ?? []).length === 30, '30 localized URLs');
   const robotsResponse = await get('/robots.txt');
   const robots = await robotsResponse.text();
   record('Robots sitemap reference', robots.includes('https://kongor-co.github.io/course-test-website/sitemap.xml'), 'production sitemap URL');

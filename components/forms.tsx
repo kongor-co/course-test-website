@@ -6,6 +6,7 @@ import { Textarea } from '@/components/ui/textarea';
 import type { Locale } from '@/lib/site-content';
 import { internalPath } from '@/lib/routes';
 import { useEffect, useState, type SyntheticEvent } from 'react';
+import { getCourseCards, type CourseSlug } from '@/lib/course-catalog';
 
 type FormState = 'idle' | 'sending' | 'success' | 'error';
 type FormSubmitEvent = SyntheticEvent<HTMLFormElement, SubmitEvent>;
@@ -13,6 +14,7 @@ type FormSubmitEvent = SyntheticEvent<HTMLFormElement, SubmitEvent>;
 const labels = {
   en: {
     email: 'Email address',
+    course: 'Course',
     reason: 'Why do you want to take this course?',
     reasonHint: '50 to 1,000 characters',
     cohort: 'Preferred cohort',
@@ -36,6 +38,7 @@ const labels = {
   },
   de: {
     email: 'E-Mail-Adresse',
+    course: 'Kurs',
     reason: 'Warum möchtest du diesen Kurs besuchen?',
     reasonHint: '50 bis 1.000 Zeichen',
     cohort: 'Bevorzugter Kursstart',
@@ -71,23 +74,33 @@ async function postForm(endpoint: string, form: HTMLFormElement) {
   }
 }
 
-export function ApplicationForm({ locale, cohort = '' }: { locale: Locale; cohort?: string }) {
+export function ApplicationForm({ locale, cohort = '', course = '' }: { locale: Locale; cohort?: string; course?: string }) {
   const copy = labels[locale];
+  const courses = getCourseCards(locale);
   const [state, setState] = useState<FormState>('idle');
   const [cohortValue, setCohortValue] = useState(cohort);
+  const initialCourse = courses.some((item) => item.slug === course) ? course as CourseSlug : 'it-project-management-ai';
+  const [courseValue, setCourseValue] = useState<CourseSlug>(initialCourse);
   const endpoint = import.meta.env.PUBLIC_APPLICATION_ENDPOINT;
 
   useEffect(() => {
-    if (cohort) return;
-    const requested = new URLSearchParams(window.location.search).get('cohort') ?? '';
+    const params = new URLSearchParams(window.location.search);
+    const requestedCourse = params.get('course') ?? '';
+    const requested = cohort || params.get('cohort') || '';
     const aliases: Record<string, string> = {
       '5. Okt 2026': '5 Oct 2026',
       '2. Nov 2026': '2 Nov 2026',
       '30. Nov 2026': '30 Nov 2026',
     };
-    const timer = window.setTimeout(() => setCohortValue(aliases[requested] ?? requested), 0);
+    const timer = window.setTimeout(() => {
+      const matchingCourse = courses.find((item) => item.slug === requestedCourse);
+      if (matchingCourse) setCourseValue(matchingCourse.slug);
+      setCohortValue(aliases[requested] ?? requested);
+    }, 0);
     return () => window.clearTimeout(timer);
-  }, [cohort]);
+  }, [cohort, course]);
+
+  const selectedCourse = courses.find((item) => item.slug === courseValue) ?? courses[0];
 
   async function submit(event: FormSubmitEvent) {
     event.preventDefault();
@@ -123,6 +136,12 @@ export function ApplicationForm({ locale, cohort = '' }: { locale: Locale; cohor
         <Input id="application-email" className="form-control" name="email" type="email" autoComplete="email" required />
       </div>
       <div className="form-field">
+        <label htmlFor="application-course">{copy.course}</label>
+        <select id="application-course" className="form-control" name="course" value={courseValue} onChange={(event) => { setCourseValue(event.target.value as CourseSlug); setCohortValue(''); }} required>
+          {courses.map((item) => <option value={item.slug} key={item.slug}>{item.title}</option>)}
+        </select>
+      </div>
+      <div className="form-field">
         <label htmlFor="application-reason">{copy.reason}</label>
         <Textarea id="application-reason" className="form-control form-textarea" name="reason" minLength={50} maxLength={1000} required />
         <small>{copy.reasonHint}</small>
@@ -131,9 +150,7 @@ export function ApplicationForm({ locale, cohort = '' }: { locale: Locale; cohor
         <label htmlFor="application-cohort">{copy.cohort}</label>
         <select id="application-cohort" className="form-control" name="cohort" value={cohortValue} onChange={(event) => setCohortValue(event.target.value)}>
           <option value="">Flexible</option>
-          <option value="5 Oct 2026">5 Oct 2026 · Full-time</option>
-          <option value="2 Nov 2026">2 Nov 2026 · Part-time</option>
-          <option value="30 Nov 2026">30 Nov 2026 · Full-time</option>
+          {selectedCourse.cohorts.map((item) => <option value={item.date} key={item.date}>{item.date} · {item.track}</option>)}
         </select>
       </div>
       <label className="check-field">

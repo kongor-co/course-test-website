@@ -2,7 +2,7 @@ export const locales = ['de', 'en'] as const;
 export type Locale = (typeof locales)[number];
 
 type PreviewContent = {
-  nav: { course: string; curriculum: string; about: string; contact: string; apply: string };
+  nav: { course: string; schedule: string; about: string; contact: string; apply: string };
   eyebrow: string;
   title: string;
   lead: string;
@@ -20,7 +20,7 @@ type PreviewContent = {
 
 export const previewContent: Record<Locale, PreviewContent> = {
   en: {
-    nav: { course: 'Course', curriculum: 'Curriculum', about: 'About', contact: 'Contact', apply: 'Apply' },
+    nav: { course: 'Courses', schedule: 'Schedule', about: 'About', contact: 'Contact', apply: 'Apply' },
     eyebrow: 'Online course · English · Germany-focused',
     title: 'IT Project Management in the World of AI Automations',
     lead: 'Build the project, Agile, product, coordination, and AI workflow skills needed to manage digital work as roles and operating models change.',
@@ -44,7 +44,7 @@ export const previewContent: Record<Locale, PreviewContent> = {
     ],
   },
   de: {
-    nav: { course: 'Kurs', curriculum: 'Curriculum', about: 'Über uns', contact: 'Kontakt', apply: 'Bewerben' },
+    nav: { course: 'Kurse', schedule: 'Termine', about: 'Über uns', contact: 'Kontakt', apply: 'Bewerben' },
     eyebrow: 'Onlinekurs · Unterricht auf Englisch · Deutschland-Fokus',
     title: 'IT Project Management in the World of AI Automations',
     lead: 'Entwickle Projekt-, Agile-, Produkt-, Koordinations- und KI-Workflow-Kompetenzen für digitale Arbeit in sich verändernden Rollen und Organisationsmodellen.',

@@ -32,8 +32,8 @@ export function SiteFooter({ locale, path = '' }: { locale: Locale; path?: strin
         </div>
         <div className="footer-links">
           <strong>Explore</strong>
-          <a href={internalPath(`/${locale}/course/`)}>{nav.course}</a>
-          <a href={internalPath(`/${locale}/curriculum/`)}>{nav.curriculum}</a>
+          <a href={internalPath(`/${locale}/courses/`)}>{nav.course}</a>
+          <a href={internalPath(`/${locale}/schedule/`)}>{nav.schedule}</a>
           <a href={internalPath(`/${locale}/about/`)}>{nav.about}</a>
           <a href={internalPath(`/${locale}/apply/`)}>{nav.apply}</a>
           <a href={internalPath(`/${locale}/contact/`)}>{nav.contact}</a>

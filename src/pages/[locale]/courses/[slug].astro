@@ -1,0 +1,18 @@
+---
+import { AdditionalCoursePage } from '@/components/additional-course-page';
+import { additionalCoursesByLocale, additionalCourseSlugs, type AdditionalCourseSlug } from '@/lib/course-catalog';
+import { locales, type Locale } from '@/lib/site-content';
+import SiteLayout from '../../../layouts/SiteLayout.astro';
+
+export function getStaticPaths() {
+  return locales.flatMap((locale) => additionalCourseSlugs.map((slug) => ({ params: { locale, slug } })));
+}
+
+const locale = Astro.params.locale as Locale;
+const slug = Astro.params.slug as AdditionalCourseSlug;
+const course = additionalCoursesByLocale[locale][slug];
+const description = course.summary;
+---
+<SiteLayout locale={locale} path={`courses/${slug}`} title={course.title} description={description} useSocialImage={false}>
+  <AdditionalCoursePage locale={locale} course={course} client:load />
+</SiteLayout>

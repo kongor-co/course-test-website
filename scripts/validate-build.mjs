@@ -5,7 +5,13 @@ import { fileURLToPath } from 'node:url';
 
 const outputDirectory = fileURLToPath(new URL('../dist/', import.meta.url));
 const locales = ['de', 'en'];
-const pages = ['', 'course', 'curriculum', 'about', 'apply', 'contact', 'privacy', 'imprint', 'cookies'];
+const pages = ['', 'course', 'curriculum', 'courses', 'schedule', 'about', 'apply', 'contact', 'privacy', 'imprint', 'cookies'];
+const coursePages = [
+  'courses/tech-product-management-ai',
+  'courses/tech-product-management-ai/curriculum',
+  'courses/digital-transformation-ai',
+  'courses/digital-transformation-ai/curriculum',
+];
 const failures = [];
 
 function fail(message) {
@@ -13,7 +19,7 @@ function fail(message) {
 }
 
 for (const locale of locales) {
-  for (const page of pages) {
+  for (const page of [...pages, ...coursePages]) {
     const file = join(outputDirectory, locale, page, 'index.html');
     if (!existsSync(file)) {
       fail(`Missing route: /${locale}/${page}`);
@@ -44,9 +50,24 @@ if (!existsSync(pdfPath)) {
   if (hash !== 'F0E0F7334CCB4FA1C48AAF7E892634B51EE66FEB4CD08A483D3F624B9DD71124') fail('Curriculum PDF hash changed unexpectedly');
 }
 
+const additionalPdfs = [
+  'the-best-school-tech-product-management-with-ai-assistance-curriculum-en-2026-08-31.pdf',
+  'the-best-school-digital-transformation-with-ai-curriculum-en-2026-08-31.pdf',
+];
+for (const filename of additionalPdfs) {
+  const file = join(outputDirectory, 'downloads', filename);
+  if (!existsSync(file)) {
+    fail(`Missing additional curriculum PDF: ${filename}`);
+    continue;
+  }
+  const pdf = readFileSync(file);
+  if (pdf.subarray(0, 4).toString('ascii') !== '%PDF') fail(`Invalid additional curriculum PDF: ${filename}`);
+  if (pdf.length < 15000) fail(`Additional curriculum PDF is unexpectedly small: ${filename}`);
+}
+
 if (failures.length > 0) {
   for (const failure of failures) console.error(failure);
   process.exitCode = 1;
 } else {
-  console.log('Validated 18 localized routes, Pages paths, metadata, and the curriculum PDF.');
+  console.log('Validated 30 localized routes, Pages paths, metadata, and three curriculum PDFs.');
 }

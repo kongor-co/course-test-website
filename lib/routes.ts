@@ -9,3 +9,7 @@ export function internalPath(path: string): string {
 export function curriculumPdfPath(): string {
   return internalPath('/downloads/the-best-school-it-project-management-curriculum-en-2026-08-28.pdf');
 }
+
+export function coursePdfPath(filename: string): string {
+  return internalPath(`/downloads/${filename}`);
+}

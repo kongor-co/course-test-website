@@ -1,15 +1,23 @@
 'use client';
 
 import { curriculumByLocale } from '@/lib/curriculum';
+import type { Phase } from '@/lib/curriculum';
 import type { Locale } from '@/lib/site-content';
 import { useState } from 'react';
 
-export function CurriculumTrack({ locale }: { locale: Locale }) {
+type CurriculumTrackProps = {
+  locale: Locale;
+  phases?: Phase[];
+  fullLabel?: string;
+  partLabel?: string;
+};
+
+export function CurriculumTrack({ locale, phases: suppliedPhases, fullLabel, partLabel }: CurriculumTrackProps) {
   const [track, setTrack] = useState<'full' | 'part'>('full');
-  const phases = curriculumByLocale[locale];
+  const phases = suppliedPhases ?? curriculumByLocale[locale];
   const labels = locale === 'de'
-    ? { full: 'Vollzeit · 12 Wochen', part: 'Teilzeit · 20 Wochen', topics: 'Kernthemen', ai: 'KI-Perspektive', output: 'Praktisches Ergebnis', field: 'Aus der Praxis' }
-    : { full: 'Full-time · 12 weeks', part: 'Part-time · 20 weeks', topics: 'Core topics', ai: 'AI-era angle', output: 'Practical output', field: 'From the field' };
+    ? { full: fullLabel ?? 'Vollzeit · 12 Wochen', part: partLabel ?? 'Teilzeit · 20 Wochen', topics: 'Kernthemen', ai: 'KI-Perspektive', output: 'Praktisches Ergebnis', field: 'Aus der Praxis' }
+    : { full: fullLabel ?? 'Full-time · 12 weeks', part: partLabel ?? 'Part-time · 20 weeks', topics: 'Core topics', ai: 'AI-era angle', output: 'Practical output', field: 'From the field' };
 
   return (
     <div>
